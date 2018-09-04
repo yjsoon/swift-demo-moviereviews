@@ -45,6 +45,8 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
              
         // If appropriate, configure the new managed object.
         newMovie.timestamp = Date()
+        newMovie.name = "Testing"
+        newMovie.year = 1990
 
         // Save the context.
         do {
@@ -111,7 +113,8 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
     }
 
     func configureCell(_ cell: UITableViewCell, withMovie movie: Movie) {
-        cell.textLabel!.text = movie.timestamp!.description
+        cell.textLabel!.text = movie.name!
+        cell.detailTextLabel!.text = movie.timestamp!.description
     }
 
     // MARK: - Fetched results controller

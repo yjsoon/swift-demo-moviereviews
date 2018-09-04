@@ -14,11 +14,8 @@ class DetailViewController: UIViewController {
 
 
     func configureView() {
-        // Update the user interface for the detail item.
-        if let detail = detailItem {
-            if let label = detailDescriptionLabel {
-                label.text = detail.timestamp!.description
-            }
+        if let movie = movie {
+            self.title = "\(movie.name!) (\(movie.year))"
         }
     }
 
@@ -33,7 +30,7 @@ class DetailViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
 
-    var detailItem: Movie? {
+    var movie: Movie? {
         didSet {
             // Update the view.
             configureView()

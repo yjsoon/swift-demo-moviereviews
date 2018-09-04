@@ -24,7 +24,47 @@ class DetailViewController: UIViewController, UITableViewDataSource, UITableView
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         configureView()
+        let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(insertNewObject(_:)))
+        navigationItem.rightBarButtonItem = addButton
+
     }
+    
+    @objc
+    func insertNewObject(_ sender: Any) {
+        
+        let alert = UIAlertController(title: "Add Review", message: "", preferredStyle: .alert)
+        alert.addTextField { (textField) in
+            textField.placeholder = "Rating (1 to 5)"
+            textField.keyboardType = .numberPad
+        }
+        alert.addTextField { (textField) in
+            textField.placeholder = "Your review"
+        }
+        let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        alert.addAction(cancel)
+        let add = UIAlertAction(title: "Add", style: .default) { (_) in
+            let context = self.fetchedResultsController.managedObjectContext
+            let newReview = Review(context: context)
+            
+            newReview.rating = Int16(alert.textFields![0].text!)!
+            newReview.text = alert.textFields![1].text!
+            newReview.timestamp = Date()
+            
+            // Save the context.
+            do {
+                try context.save()
+            } catch {
+                let nserror = error as NSError
+                fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
+            }
+        }
+        alert.addAction(add)
+        present(alert, animated: true, completion: nil)
+        
+    }
+    
+
+    
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

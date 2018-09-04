@@ -50,6 +50,7 @@ class DetailViewController: UIViewController, UITableViewDataSource, UITableView
             newReview.text = alert.textFields![1].text!
             newReview.timestamp = Date()
             newReview.movie = self.movie
+            self.movie?.addToReviews(newReview)
             
             // Save the context.
             do {
@@ -131,6 +132,8 @@ class DetailViewController: UIViewController, UITableViewDataSource, UITableView
             return _fetchedResultsController!
         }
         
+        NSFetchedResultsController<Review>.deleteCache(withName: "Another")
+        
         let fetchRequest: NSFetchRequest<Review> = Review.fetchRequest()
         
         // Set the batch size to a suitable number.
@@ -141,7 +144,7 @@ class DetailViewController: UIViewController, UITableViewDataSource, UITableView
         fetchRequest.sortDescriptors = [sortDescriptor]
         
         // Filter for current movie.
-        let predicate = NSPredicate(format: "movie.name == %@", movie!.name!)
+        let predicate = NSPredicate(format: "movie == %@", movie!)
         fetchRequest.predicate = predicate
         
         // Edit the section name key path and cache name if appropriate.

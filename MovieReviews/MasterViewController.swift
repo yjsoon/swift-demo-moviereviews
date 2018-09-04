@@ -40,23 +40,37 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
 
     @objc
     func insertNewObject(_ sender: Any) {
-        let context = self.fetchedResultsController.managedObjectContext
-        let newMovie = Movie(context: context)
-             
-        // If appropriate, configure the new managed object.
-        newMovie.timestamp = Date()
-        newMovie.name = "Testing"
-        newMovie.year = 1990
 
-        // Save the context.
-        do {
-            try context.save()
-        } catch {
-            // Replace this implementation with code to handle the error appropriately.
-            // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-            let nserror = error as NSError
-            fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
+        let alert = UIAlertController(title: "Add Movie", message: "", preferredStyle: .alert)
+        alert.addTextField { (textField) in
+            textField.placeholder = "Movie name"
         }
+        alert.addTextField { (textField) in
+            textField.placeholder = "Movie year"
+            textField.keyboardType = .numberPad
+        }
+        let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        alert.addAction(cancel)
+        let add = UIAlertAction(title: "Add", style: .default) { (_) in
+            let context = self.fetchedResultsController.managedObjectContext
+            let newMovie = Movie(context: context)
+            
+            newMovie.name = alert.textFields![0].text!
+            newMovie.year = Int16(alert.textFields![1].text!)!
+            newMovie.timestamp = Date()
+            
+            // Save the context.
+            do {
+                try context.save()
+            } catch {
+                let nserror = error as NSError
+                fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
+            }
+        }
+        alert.addAction(add)
+        present(alert, animated: true, completion: nil)
+
+        
     }
 
     // MARK: - Segues

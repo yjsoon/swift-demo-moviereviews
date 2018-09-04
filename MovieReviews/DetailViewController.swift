@@ -49,6 +49,7 @@ class DetailViewController: UIViewController, UITableViewDataSource, UITableView
             newReview.rating = Int16(alert.textFields![0].text!)!
             newReview.text = alert.textFields![1].text!
             newReview.timestamp = Date()
+            newReview.movie = self.movie
             
             // Save the context.
             do {
@@ -137,12 +138,15 @@ class DetailViewController: UIViewController, UITableViewDataSource, UITableView
         
         // Edit the sort key as appropriate.
         let sortDescriptor = NSSortDescriptor(key: "rating", ascending: false)
-        
         fetchRequest.sortDescriptors = [sortDescriptor]
+        
+        // Filter for current movie.
+        let predicate = NSPredicate(format: "movie.name == %@", movie!.name!)
+        fetchRequest.predicate = predicate
         
         // Edit the section name key path and cache name if appropriate.
         // nil for section name key path means "no sections".
-        let aFetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: self.managedObjectContext!, sectionNameKeyPath: nil, cacheName: "Master")
+        let aFetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: self.managedObjectContext!, sectionNameKeyPath: nil, cacheName: "Another")
         aFetchedResultsController.delegate = self
         _fetchedResultsController = aFetchedResultsController
         

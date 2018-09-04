@@ -52,8 +52,8 @@ class DetailViewController: UIViewController, UITableViewDataSource, UITableView
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ReviewCell", for: indexPath)
-        let movie = fetchedResultsController.object(at: indexPath)
-        configureCell(cell, withMovie: movie)
+        let review = fetchedResultsController.object(at: indexPath)
+        configureCell(cell, withReview: review)
         return cell
     }
     
@@ -78,25 +78,25 @@ class DetailViewController: UIViewController, UITableViewDataSource, UITableView
         }
     }
     
-    func configureCell(_ cell: UITableViewCell, withMovie movie: Movie) {
-        cell.textLabel!.text = movie.name!
-        cell.detailTextLabel!.text = movie.timestamp!.description
+    func configureCell(_ cell: UITableViewCell, withReview review: Review) {
+        cell.textLabel!.text = String(review.rating)
+        cell.detailTextLabel!.text = review.text!
     }
     
     // MARK: - Fetched results controller
     
-    var fetchedResultsController: NSFetchedResultsController<Movie> {
+    var fetchedResultsController: NSFetchedResultsController<Review> {
         if _fetchedResultsController != nil {
             return _fetchedResultsController!
         }
         
-        let fetchRequest: NSFetchRequest<Movie> = Movie.fetchRequest()
+        let fetchRequest: NSFetchRequest<Review> = Review.fetchRequest()
         
         // Set the batch size to a suitable number.
         fetchRequest.fetchBatchSize = 20
         
         // Edit the sort key as appropriate.
-        let sortDescriptor = NSSortDescriptor(key: "name", ascending: true)
+        let sortDescriptor = NSSortDescriptor(key: "rating", ascending: false)
         
         fetchRequest.sortDescriptors = [sortDescriptor]
         
@@ -117,7 +117,7 @@ class DetailViewController: UIViewController, UITableViewDataSource, UITableView
         
         return _fetchedResultsController!
     }
-    var _fetchedResultsController: NSFetchedResultsController<Movie>? = nil
+    var _fetchedResultsController: NSFetchedResultsController<Review>? = nil
     
     func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         tableView.beginUpdates()
@@ -141,9 +141,9 @@ class DetailViewController: UIViewController, UITableViewDataSource, UITableView
         case .delete:
             tableView.deleteRows(at: [indexPath!], with: .fade)
         case .update:
-            configureCell(tableView.cellForRow(at: indexPath!)!, withMovie: anObject as! Movie)
+            configureCell(tableView.cellForRow(at: indexPath!)!, withReview: anObject as! Review)
         case .move:
-            configureCell(tableView.cellForRow(at: indexPath!)!, withMovie: anObject as! Movie)
+            configureCell(tableView.cellForRow(at: indexPath!)!, withReview: anObject as! Review)
             tableView.moveRow(at: indexPath!, to: newIndexPath!)
         }
     }
